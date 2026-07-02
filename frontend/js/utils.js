@@ -242,5 +242,39 @@ function qpTypeLabel(type) {
   return map[type] || '-';
 }
 
+// ── Print Formatting Helpers ────────────────────────────────────────
+
+function formatEvalPhasePrint(c) {
+  let str = c.eval_phase;
+  if (!str) return '-';
+  if (typeof str === 'string' && str.startsWith('[')) {
+    try {
+      const arr = JSON.parse(str);
+      if (Array.isArray(arr)) {
+        return arr.map(s => `<strong>${s.phase}</strong>: ${s.appointment || '-'} | ${s.date || '-'}`).join('<br>');
+      }
+    } catch(e) {}
+  }
+  return `${escapeHtml(c.eval_appointment || '-')} | ${escapeHtml(c.eval_phase || '-')} | ${escapeHtml(c.eval_date || '-')}`;
+}
+
+function formatSquadSessionPrint(c) {
+  let str = c.squad_session || c.squad_sessions;
+  if (typeof str === 'object' && str !== null) {
+    return Object.entries(str).filter(([_, count]) => count > 0).map(([s, count]) => `${count}x ${s}`).join(', ') || '-';
+  }
+  if (typeof str === 'string' && str.startsWith('{')) {
+    try {
+      const obj = JSON.parse(str);
+      const parts = [];
+      if (obj.Forenoon) parts.push(`${obj.Forenoon}x Forenoon`);
+      if (obj.Afternoon) parts.push(`${obj.Afternoon}x Afternoon`);
+      if (obj["Both Sessions"]) parts.push(`${obj["Both Sessions"]}x Both Sessions`);
+      if (parts.length > 0) return parts.join(', ');
+    } catch(e) {}
+  }
+  return escapeHtml(str || '-');
+}
+
 // ── Initialize dark mode on every page ──────────────────────────────
 document.addEventListener('DOMContentLoaded', initDarkMode);

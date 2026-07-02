@@ -600,8 +600,8 @@ function generatePrintHtmlDetail(claim) {
     <tbody>
       ${claim.qp_section_enabled ? `<tr><td>1</td><td>Question Paper Setting</td><td>${qpTypeLabel(claim.qp_type)}</td><td>${claim.qp_quantity || 0}</td><td>${claim.qp_rate || 0}</td><td class="amount">${Number(claim.qp_amount || 0).toLocaleString('en-IN')}</td></tr>` : ''}
       <tr><td>${claim.qp_section_enabled ? '2' : '1'}</td><td>Paper Scrutiny</td><td>-</td><td>${claim.scrutiny_quantity || 0}</td><td>300</td><td class="amount">${Number(claim.scrutiny_amount || 0).toLocaleString('en-IN')}</td></tr>
-      <tr><td>${claim.qp_section_enabled ? '3' : '2'}</td><td>Script Evaluation</td><td>${escapeHtml(claim.eval_appointment || '-')} | ${escapeHtml(claim.eval_phase || '-')} | ${escapeHtml(claim.eval_date || '-')}</td><td>${claim.eval_scripts || 0}</td><td>30</td><td class="amount">${Number(claim.eval_amount || 0).toLocaleString('en-IN')}</td></tr>
-      <tr><td>${claim.qp_section_enabled ? '4' : '3'}</td><td>Squad Duty</td><td>${escapeHtml(claim.squad_session || '-')}</td><td>${claim.squad_days || 0} days</td><td>${claim.squad_rate || 0}</td><td class="amount">${Number(claim.squad_amount || 0).toLocaleString('en-IN')}</td></tr>
+      <tr><td>${claim.qp_section_enabled ? '3' : '2'}</td><td>Script Evaluation</td><td>${formatEvalPhasePrint(claim)}</td><td>${claim.eval_scripts || 0}</td><td>30</td><td class="amount">${Number(claim.eval_amount || 0).toLocaleString('en-IN')}</td></tr>
+      <tr><td>${claim.qp_section_enabled ? '4' : '3'}</td><td>Squad Duty</td><td>${formatSquadSessionPrint(claim)}</td><td>${claim.squad_days || 0} days</td><td>${claim.squad_rate || 0}</td><td class="amount">${Number(claim.squad_amount || 0).toLocaleString('en-IN')}</td></tr>
       <tr class="grand-total"><td colspan="5" style="text-align:right;">GRAND TOTAL</td><td class="amount" style="font-size:13pt;">₹${Number(claim.grand_total || 0).toLocaleString('en-IN')}</td></tr>
     </tbody>
   </table>
