@@ -737,11 +737,11 @@ function generatePrintHtml(claim) {
 
   <div class="signatures">
     <div class="sig-block">
-      <div class="sig-line">Claimant</div>
+      <div class="sig-line">Staff</div>
       <div class="sig-desc">Signature & Date</div>
     </div>
     <div class="sig-block">
-      <div class="sig-line">COE / Accounts</div>
+      <div class="sig-line">COE</div>
       <div class="sig-desc">Signature & Seal</div>
     </div>
   </div>
