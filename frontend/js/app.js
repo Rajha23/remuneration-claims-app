@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Element References ──────────────────────────────────────────
   const form = document.getElementById('claimForm');
-  const saveBtn = document.getElementById('saveClaimBtn');
+  const saveBtn = document.getElementById('submitBtn');
   const resetBtn = document.getElementById('resetBtn');
   const printSuccessBtn = document.getElementById('printSuccessBtn');
   let submittedClaim = null;
