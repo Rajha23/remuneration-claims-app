@@ -74,10 +74,11 @@ function validateClaim(req, res, next) {
       errors.push('Squad days must be 0-10');
     }
   }
-  if (body.squad_sessions && Array.isArray(body.squad_sessions)) {
-    body.squad_sessions.forEach(session => {
-      if (!VALID_SESSIONS.includes(session)) {
-        errors.push('Invalid session in squad duty');
+  if (body.squad_sessions && typeof body.squad_sessions === 'object') {
+    Object.values(body.squad_sessions).forEach(days => {
+      const d = parseInt(days);
+      if (isNaN(d) || d < 0 || d > 10) {
+        errors.push('Invalid days for squad session');
       }
     });
   }

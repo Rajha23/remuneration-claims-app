@@ -59,13 +59,17 @@ function createClaimsWorkbook(claims) {
   // ── Add data rows ───────────────────────────────────────────────
   claims.forEach((claim, index) => {
     let formattedSessions = claim.squad_session || '-';
-    if (typeof formattedSessions === 'string' && formattedSessions.startsWith('[')) {
+    if (typeof formattedSessions === 'string' && formattedSessions.startsWith('{')) {
       try {
-        const arr = JSON.parse(formattedSessions);
-        if (Array.isArray(arr) && arr.length > 0) {
-          const counts = {};
-          arr.forEach(s => counts[s] = (counts[s] || 0) + 1);
-          formattedSessions = Object.entries(counts).map(([s, c]) => `${c}x ${s}`).join(', ');
+        const obj = JSON.parse(formattedSessions);
+        if (typeof obj === 'object') {
+          const parts = [];
+          if (obj.Forenoon) parts.push(`${obj.Forenoon}x Forenoon`);
+          if (obj.Afternoon) parts.push(`${obj.Afternoon}x Afternoon`);
+          if (obj["Both Sessions"]) parts.push(`${obj["Both Sessions"]}x Both Sessions`);
+          if (parts.length > 0) {
+            formattedSessions = parts.join(', ');
+          }
         }
       } catch (e) {}
     }

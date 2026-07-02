@@ -266,28 +266,44 @@
           </label>
         </div>
         <div class="section-body" id="squadBody">
-          <div class="form-row" id="squadDaysContainer">
-            <div class="form-group">
-              <select class="form-select" id="squadDays" name="squad_days">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-              <label class="form-label" for="squadDays">Number of Days</label>
+          <div class="form-row-3" style="margin-bottom: var(--space-md);">
+            <div class="form-group" style="align-self: center;">
+              <div style="font-weight: 600; color: var(--text-primary);">Forenoon (₹200)</div>
             </div>
-            <!-- Empty div for alignment if needed, or we just let form-row handle it -->
+            <div class="form-group">
+              <input type="number" class="form-input squad-session-input" id="squadForenoon" name="squad_forenoon" value="0" min="0" max="10" placeholder=" ">
+              <label class="form-label" for="squadForenoon">Number of Days</label>
+            </div>
+            <div class="form-group">
+              <div class="form-input squad-session-amount" id="squadForenoonAmount" style="background:var(--bg-card);font-weight:700;color:var(--primary-600);border-color:transparent;box-shadow:none;">₹0</div>
+            </div>
           </div>
           
-          <!-- Dynamic session selectors will be appended here -->
-          <div id="squadDynamicSessions"></div>
+          <div class="form-row-3" style="margin-bottom: var(--space-md);">
+            <div class="form-group" style="align-self: center;">
+              <div style="font-weight: 600; color: var(--text-primary);">Afternoon (₹200)</div>
+            </div>
+            <div class="form-group">
+              <input type="number" class="form-input squad-session-input" id="squadAfternoon" name="squad_afternoon" value="0" min="0" max="10" placeholder=" ">
+              <label class="form-label" for="squadAfternoon">Number of Days</label>
+            </div>
+            <div class="form-group">
+              <div class="form-input squad-session-amount" id="squadAfternoonAmount" style="background:var(--bg-card);font-weight:700;color:var(--primary-600);border-color:transparent;box-shadow:none;">₹0</div>
+            </div>
+          </div>
+          
+          <div class="form-row-3">
+            <div class="form-group" style="align-self: center;">
+              <div style="font-weight: 600; color: var(--text-primary);">Both Sessions (₹400)</div>
+            </div>
+            <div class="form-group">
+              <input type="number" class="form-input squad-session-input" id="squadBoth" name="squad_both" value="0" min="0" max="10" placeholder=" ">
+              <label class="form-label" for="squadBoth">Number of Days</label>
+            </div>
+            <div class="form-group">
+              <div class="form-input squad-session-amount" id="squadBothAmount" style="background:var(--bg-card);font-weight:700;color:var(--primary-600);border-color:transparent;box-shadow:none;">₹0</div>
+            </div>
+          </div>
           <div class="subtotal-row">
             <span class="subtotal-label">Subtotal</span>
             <span class="subtotal-amount" id="squadSubtotal">₹0</span>
