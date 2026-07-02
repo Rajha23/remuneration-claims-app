@@ -243,15 +243,23 @@ function renderEditMode() {
   const c = currentClaim;
   const content = document.getElementById('claimContent');
   
-  let p1 = {}, p2 = {};
+  let p1_1 = {}, p1_2 = {}, p2 = {};
   if (typeof c.eval_phase === 'string' && c.eval_phase.startsWith('[')) {
     try {
       const arr = JSON.parse(c.eval_phase);
-      p1 = arr.find(s => s.phase === 'Phase 1') || {};
+      p1_1 = arr.find(s => s.phase === 'Phase 1' && s.date === '20-06-2026') || {};
+      p1_2 = arr.find(s => s.phase === 'Phase 1' && s.date === '21-06-2026') || {};
       p2 = arr.find(s => s.phase === 'Phase 2') || {};
     } catch(e) {}
   } else if (c.eval_phase === 'Phase 1') {
-    p1 = { appointment: c.eval_appointment, date: c.eval_date, scripts: c.eval_scripts };
+    if (c.eval_date === 'Both Days') {
+      p1_1 = { appointment: c.eval_appointment, date: '20-06-2026', scripts: Math.ceil((c.eval_scripts || 0) / 2) };
+      p1_2 = { appointment: c.eval_appointment, date: '21-06-2026', scripts: Math.floor((c.eval_scripts || 0) / 2) };
+    } else if (c.eval_date === '20-06-2026') {
+      p1_1 = { appointment: c.eval_appointment, date: '20-06-2026', scripts: c.eval_scripts };
+    } else if (c.eval_date === '21-06-2026') {
+      p1_2 = { appointment: c.eval_appointment, date: '21-06-2026', scripts: c.eval_scripts };
+    }
   } else if (c.eval_phase === 'Phase 2') {
     p2 = { appointment: c.eval_appointment, date: c.eval_date, scripts: c.eval_scripts };
   }
@@ -369,52 +377,56 @@ function renderEditMode() {
         
         <!-- Phase 1 -->
         <h4 style="margin-bottom:var(--space-sm); color:var(--text-secondary);">Phase 1</h4>
-        <div class="form-row-3" style="margin-bottom:var(--space-md);">
+        
+        <div style="margin-bottom: var(--space-sm);"><strong>20-06-2026</strong></div>
+        <div class="form-row">
           <div class="form-group">
-            <select class="form-select" id="editEvalAppt1">
+            <select class="form-select" id="editEvalAppt1_1">
               <option value="">None</option>
-              <option value="Chief Examiner" ${p1.appointment === 'Chief Examiner' ? 'selected' : ''}>Chief Examiner</option>
-              <option value="Examiner" ${p1.appointment === 'Examiner' ? 'selected' : ''}>Examiner</option>
-              <option value="Assistant Examiner" ${p1.appointment === 'Assistant Examiner' ? 'selected' : ''}>Assistant Examiner</option>
+              <option value="Chief Examiner" ${p1_1.appointment === 'Chief Examiner' ? 'selected' : ''}>Chief Examiner</option>
+              <option value="Examiner" ${p1_1.appointment === 'Examiner' ? 'selected' : ''}>Examiner</option>
+              <option value="Assistant Examiner" ${p1_1.appointment === 'Assistant Examiner' ? 'selected' : ''}>Assistant Examiner</option>
             </select>
-            <label class="form-label">Appointment</label>
+            <label class="form-label">Appointment (20-06)</label>
           </div>
           <div class="form-group">
-            <select class="form-select" id="editEvalDate1">
-              <option value="">Select Date</option>
-              <option value="Both Days" ${p1.date === 'Both Days' ? 'selected' : ''}>Both Days (20-06 & 21-06)</option>
-              <option value="20-06-2026" ${p1.date === '20-06-2026' ? 'selected' : ''}>20-06-2026</option>
-              <option value="21-06-2026" ${p1.date === '21-06-2026' ? 'selected' : ''}>21-06-2026</option>
+            <input type="number" class="form-input" id="editEvalScripts1_1" value="${p1_1.scripts || 0}" min="0" placeholder=" ">
+            <label class="form-label">Scripts (₹30 each)</label>
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-sm); margin-top: var(--space-md);"><strong>21-06-2026</strong></div>
+        <div class="form-row">
+          <div class="form-group">
+            <select class="form-select" id="editEvalAppt1_2">
+              <option value="">None</option>
+              <option value="Chief Examiner" ${p1_2.appointment === 'Chief Examiner' ? 'selected' : ''}>Chief Examiner</option>
+              <option value="Examiner" ${p1_2.appointment === 'Examiner' ? 'selected' : ''}>Examiner</option>
+              <option value="Assistant Examiner" ${p1_2.appointment === 'Assistant Examiner' ? 'selected' : ''}>Assistant Examiner</option>
             </select>
-            <label class="form-label">Date</label>
+            <label class="form-label">Appointment (21-06)</label>
           </div>
           <div class="form-group">
-            <input type="number" class="form-input" id="editEvalScripts1" value="${p1.scripts || 0}" min="0" placeholder=" ">
+            <input type="number" class="form-input" id="editEvalScripts1_2" value="${p1_2.scripts || 0}" min="0" placeholder=" ">
             <label class="form-label">Scripts (₹30 each)</label>
           </div>
         </div>
 
         <!-- Phase 2 -->
-        <h4 style="margin-bottom:var(--space-sm); color:var(--text-secondary);">Phase 2</h4>
-        <div class="form-row-3">
+        <h4 style="margin-bottom:var(--space-sm); color:var(--text-secondary); margin-top:var(--space-md);">Phase 2</h4>
+        <div style="margin-bottom: var(--space-sm);"><strong>01-07-2026</strong></div>
+        <div class="form-row">
           <div class="form-group">
-            <select class="form-select" id="editEvalAppt2">
+            <select class="form-select" id="editEvalAppt2_1">
               <option value="">None</option>
               <option value="Chief Examiner" ${p2.appointment === 'Chief Examiner' ? 'selected' : ''}>Chief Examiner</option>
               <option value="Examiner" ${p2.appointment === 'Examiner' ? 'selected' : ''}>Examiner</option>
               <option value="Assistant Examiner" ${p2.appointment === 'Assistant Examiner' ? 'selected' : ''}>Assistant Examiner</option>
             </select>
-            <label class="form-label">Appointment</label>
+            <label class="form-label">Appointment (01-07)</label>
           </div>
           <div class="form-group">
-            <select class="form-select" id="editEvalDate2">
-              <option value="">Select Date</option>
-              <option value="01-07-2026" ${p2.date === '01-07-2026' ? 'selected' : ''}>01-07-2026</option>
-            </select>
-            <label class="form-label">Date</label>
-          </div>
-          <div class="form-group">
-            <input type="number" class="form-input" id="editEvalScripts2" value="${p2.scripts || 0}" min="0" placeholder=" ">
+            <input type="number" class="form-input" id="editEvalScripts2_1" value="${p2.scripts || 0}" min="0" placeholder=" ">
             <label class="form-label">Scripts (₹30 each)</label>
           </div>
         </div>
@@ -491,23 +503,22 @@ async function saveEdit() {
     scrutiny_quantity: parseInt(document.getElementById('editScrutinyQuantity').value) || 0,
     eval_sessions: (() => {
       let sessions = [];
-      const s1 = parseInt(document.getElementById('editEvalScripts1').value) || 0;
-      if (s1 > 0 || document.getElementById('editEvalAppt1').value) {
-        sessions.push({
-          phase: 'Phase 1',
-          appointment: document.getElementById('editEvalAppt1').value || null,
-          date: document.getElementById('editEvalDate1').value || null,
-          scripts: s1
-        });
+      const s1_1 = parseInt(document.getElementById('editEvalScripts1_1').value) || 0;
+      const a1_1 = document.getElementById('editEvalAppt1_1').value;
+      if (s1_1 > 0 || a1_1) {
+        sessions.push({ phase: 'Phase 1', appointment: a1_1 || null, date: '20-06-2026', scripts: s1_1 });
       }
-      const s2 = parseInt(document.getElementById('editEvalScripts2').value) || 0;
-      if (s2 > 0 || document.getElementById('editEvalAppt2').value) {
-        sessions.push({
-          phase: 'Phase 2',
-          appointment: document.getElementById('editEvalAppt2').value || null,
-          date: document.getElementById('editEvalDate2').value || null,
-          scripts: s2
-        });
+      
+      const s1_2 = parseInt(document.getElementById('editEvalScripts1_2').value) || 0;
+      const a1_2 = document.getElementById('editEvalAppt1_2').value;
+      if (s1_2 > 0 || a1_2) {
+        sessions.push({ phase: 'Phase 1', appointment: a1_2 || null, date: '21-06-2026', scripts: s1_2 });
+      }
+      
+      const s2_1 = parseInt(document.getElementById('editEvalScripts2_1').value) || 0;
+      const a2_1 = document.getElementById('editEvalAppt2_1').value;
+      if (s2_1 > 0 || a2_1) {
+        sessions.push({ phase: 'Phase 2', appointment: a2_1 || null, date: '01-07-2026', scripts: s2_1 });
       }
       return sessions;
     })(),

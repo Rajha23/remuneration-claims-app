@@ -169,7 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
     recalculate();
   });
 
-  [evalScripts1, evalScripts2].forEach(input => {
+  [document.getElementById('evalScripts1_1'), document.getElementById('evalScripts1_2'), document.getElementById('evalScripts2_1')].forEach(input => {
+    if (!input) return;
     input.addEventListener('input', () => {
       if (parseInt(input.value) < 0) input.value = 0;
       recalculate();
@@ -207,8 +208,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let evalAmount = 0;
     if (evalEnabled.checked) {
       let scripts = 0;
-      if (evalPhase1Toggle.checked) scripts += Math.max(0, parseInt(evalScripts1.value || 0));
-      if (evalPhase2Toggle.checked) scripts += Math.max(0, parseInt(evalScripts2.value || 0));
+      if (evalPhase1Toggle.checked) {
+        scripts += Math.max(0, parseInt(document.getElementById('evalScripts1_1').value || 0));
+        scripts += Math.max(0, parseInt(document.getElementById('evalScripts1_2').value || 0));
+      }
+      if (evalPhase2Toggle.checked) {
+        scripts += Math.max(0, parseInt(document.getElementById('evalScripts2_1').value || 0));
+      }
       evalAmount = scripts * 30;
     }
     evalSubtotal.textContent = formatCurrency(evalAmount);
@@ -285,20 +291,18 @@ document.addEventListener('DOMContentLoaded', () => {
         eval_sessions: (() => {
           let sessions = [];
           if (evalPhase1Toggle.checked) {
-            sessions.push({
-              phase: 'Phase 1',
-              appointment: evalAppt1.value || null,
-              date: evalDate1.value || null,
-              scripts: parseInt(evalScripts1.value) || 0
-            });
+            const a1 = document.getElementById('evalAppt1_1').value;
+            const s1 = parseInt(document.getElementById('evalScripts1_1').value) || 0;
+            if (a1 || s1 > 0) sessions.push({ phase: 'Phase 1', appointment: a1 || null, date: '20-06-2026', scripts: s1 });
+            
+            const a2 = document.getElementById('evalAppt1_2').value;
+            const s2 = parseInt(document.getElementById('evalScripts1_2').value) || 0;
+            if (a2 || s2 > 0) sessions.push({ phase: 'Phase 1', appointment: a2 || null, date: '21-06-2026', scripts: s2 });
           }
           if (evalPhase2Toggle.checked) {
-            sessions.push({
-              phase: 'Phase 2',
-              appointment: evalAppt2.value || null,
-              date: evalDate2.value || null,
-              scripts: parseInt(evalScripts2.value) || 0
-            });
+            const a3 = document.getElementById('evalAppt2_1').value;
+            const s3 = parseInt(document.getElementById('evalScripts2_1').value) || 0;
+            if (a3 || s3 > 0) sessions.push({ phase: 'Phase 2', appointment: a3 || null, date: '01-07-2026', scripts: s3 });
           }
           return sessions;
         })(),
@@ -344,8 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('squadForenoonAmount').textContent = '₹0';
       document.getElementById('squadAfternoonAmount').textContent = '₹0';
       document.getElementById('squadBothAmount').textContent = '₹0';
-      evalDate.innerHTML = '<option value="">Select Phase first</option>';
-      evalDate.disabled = true;
       recalculate();
 
     } catch (err) {
@@ -414,8 +416,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
         qpRateDisplay.textContent = '₹0';
         squadRateDisplay.textContent = '₹0';
-        evalDate.innerHTML = '<option value="">Select Phase first</option>';
-        evalDate.disabled = true;
         recalculate();
         showToast('Form has been reset', 'info');
       }
@@ -499,13 +499,13 @@ document.addEventListener('DOMContentLoaded', () => {
       
       eval_enabled: evalEnabled.checked,
       eval_phase1: evalPhase1Toggle.checked,
-      eval_appt1: evalAppt1.value,
-      eval_date1: evalDate1.value,
-      eval_scripts1: evalScripts1.value,
+      eval_appt1_1: document.getElementById('evalAppt1_1').value,
+      eval_scripts1_1: document.getElementById('evalScripts1_1').value,
+      eval_appt1_2: document.getElementById('evalAppt1_2').value,
+      eval_scripts1_2: document.getElementById('evalScripts1_2').value,
       eval_phase2: evalPhase2Toggle.checked,
-      eval_appt2: evalAppt2.value,
-      eval_date2: evalDate2.value,
-      eval_scripts2: evalScripts2.value,
+      eval_appt2_1: document.getElementById('evalAppt2_1').value,
+      eval_scripts2_1: document.getElementById('evalScripts2_1').value,
       
       squad_enabled: squadEnabled.checked,
       squad_sessions: {
@@ -558,16 +558,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.eval_phase1) {
         evalPhase1Toggle.checked = true;
         evalPhase1Toggle.dispatchEvent(new Event('change'));
-        if (data.eval_appt1) evalAppt1.value = data.eval_appt1;
-        if (data.eval_date1) evalDate1.value = data.eval_date1;
-        if (data.eval_scripts1) evalScripts1.value = data.eval_scripts1;
+        if (data.eval_appt1_1) document.getElementById('evalAppt1_1').value = data.eval_appt1_1;
+        if (data.eval_scripts1_1) document.getElementById('evalScripts1_1').value = data.eval_scripts1_1;
+        if (data.eval_appt1_2) document.getElementById('evalAppt1_2').value = data.eval_appt1_2;
+        if (data.eval_scripts1_2) document.getElementById('evalScripts1_2').value = data.eval_scripts1_2;
       }
       if (data.eval_phase2) {
         evalPhase2Toggle.checked = true;
         evalPhase2Toggle.dispatchEvent(new Event('change'));
-        if (data.eval_appt2) evalAppt2.value = data.eval_appt2;
-        if (data.eval_date2) evalDate2.value = data.eval_date2;
-        if (data.eval_scripts2) evalScripts2.value = data.eval_scripts2;
+        if (data.eval_appt2_1) document.getElementById('evalAppt2_1').value = data.eval_appt2_1;
+        if (data.eval_scripts2_1) document.getElementById('evalScripts2_1').value = data.eval_scripts2_1;
       }
     }
     
