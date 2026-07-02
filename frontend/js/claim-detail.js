@@ -153,6 +153,24 @@ function renderViewMode() {
           <div class="detail-field-value">${escapeHtml(c.designation)}</div>
         </div>
       </div>
+      <div class="claim-detail-info" style="border-top: 1px solid var(--border-color); padding-top: var(--space-md); margin-top: var(--space-md);">
+        <div class="detail-field">
+          <div class="detail-field-label">Bank Name</div>
+          <div class="detail-field-value">${escapeHtml(c.bank_name || '-')}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Account Number</div>
+          <div class="detail-field-value">${escapeHtml(c.account_number || '-')}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">IFSC Code</div>
+          <div class="detail-field-value">${escapeHtml(c.ifsc_code || '-')}</div>
+        </div>
+        <div class="detail-field">
+          <div class="detail-field-label">Mobile Number</div>
+          <div class="detail-field-value">${escapeHtml(c.mobile_number || '-')}</div>
+        </div>
+      </div>
     </div>
 
     <!-- Claim Breakdown -->
@@ -282,9 +300,29 @@ function renderEditMode() {
             <label class="form-label" for="editDesignation">Designation *</label>
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" class="form-input" id="editBankName" value="${escapeHtml(c.bank_name || '')}" placeholder=" " required>
+            <label class="form-label" for="editBankName">Bank Name *</label>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-input" id="editAccountNumber" value="${escapeHtml(c.account_number || '')}" placeholder=" " required>
+            <label class="form-label" for="editAccountNumber">Account Number *</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" class="form-input" id="editIfscCode" value="${escapeHtml(c.ifsc_code || '')}" placeholder=" " required>
+            <label class="form-label" for="editIfscCode">IFSC Code *</label>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-input" id="editMobileNumber" value="${escapeHtml(c.mobile_number || '')}" placeholder=" " required>
+            <label class="form-label" for="editMobileNumber">Mobile Number *</label>
+          </div>
+        </div>
       </div>
 
-      <!-- QP Setting -->
+      <!-- Question Paper Setting -->
       <div class="card" style="margin-bottom:var(--space-lg);">
         <h3 style="margin-bottom:var(--space-md);display:flex;align-items:center;justify-content:space-between;">
           <span>📝 Question Paper Setting</span>
@@ -442,6 +480,10 @@ async function saveEdit() {
     staff_id: document.getElementById('editStaffId').value.trim(),
     department: document.getElementById('editDepartment').value.trim(),
     designation: document.getElementById('editDesignation').value,
+    bank_name: document.getElementById('editBankName').value.trim(),
+    account_number: document.getElementById('editAccountNumber').value.trim(),
+    ifsc_code: document.getElementById('editIfscCode').value.trim(),
+    mobile_number: document.getElementById('editMobileNumber').value.trim(),
     staff_section_enabled: true,
     qp_section_enabled: document.getElementById('editQpEnabled').checked,
     qp_type: document.getElementById('editQpType').value || null,
@@ -477,8 +519,8 @@ async function saveEdit() {
   };
 
   // Validate
-  if (!payload.staff_name || !payload.staff_id || !payload.department || !payload.designation) {
-    showToast('Staff Name, ID, Department, and Designation are required', 'error');
+  if (!payload.staff_name || !payload.staff_id || !payload.department || !payload.designation || !payload.bank_name || !payload.account_number || !payload.ifsc_code || !payload.mobile_number) {
+    showToast('All Staff and Bank Details are required', 'error');
     btn.classList.remove('loading');
     btn.disabled = false;
     return;
@@ -595,6 +637,15 @@ function generatePrintHtmlDetail(claim) {
     <div><span class="info-label">Department:</span> ${escapeHtml(claim.department || '-')}</div>
     <div><span class="info-label">Designation:</span> ${escapeHtml(claim.designation || '-')}</div>
   </div>
+  <div class="info-row" style="border-top:1px dashed #ccc; padding-top:10pt; margin-top:5pt;">
+    <div><span class="info-label">Bank Name:</span> ${escapeHtml(claim.bank_name || '-')}</div>
+    <div><span class="info-label">A/C No:</span> ${escapeHtml(claim.account_number || '-')}</div>
+  </div>
+  <div class="info-row">
+    <div><span class="info-label">IFSC Code:</span> ${escapeHtml(claim.ifsc_code || '-')}</div>
+    <div><span class="info-label">Mobile:</span> ${escapeHtml(claim.mobile_number || '-')}</div>
+  </div>
+
   <table>
     <thead><tr><th>S.No</th><th>Description</th><th>Details</th><th>Quantity</th><th>Rate (₹)</th><th style="text-align:right">Amount (₹)</th></tr></thead>
     <tbody>

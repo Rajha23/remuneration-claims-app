@@ -54,6 +54,10 @@ function initDatabase() {
       staff_id TEXT NOT NULL,
       department TEXT NOT NULL,
       designation TEXT NOT NULL,
+      bank_name TEXT,
+      account_number TEXT,
+      ifsc_code TEXT,
+      mobile_number TEXT,
       staff_section_enabled INTEGER DEFAULT 1,
 
       /* Question Paper Setting */
@@ -134,6 +138,17 @@ function initDatabase() {
       'System Administrator'
     );
     console.log('   ➜ Default admin account created');
+  }
+
+  // ── Migrations ──────────────────────────────────────────────────
+  try {
+    db.exec(`ALTER TABLE remuneration_claims ADD COLUMN bank_name TEXT`);
+    db.exec(`ALTER TABLE remuneration_claims ADD COLUMN account_number TEXT`);
+    db.exec(`ALTER TABLE remuneration_claims ADD COLUMN ifsc_code TEXT`);
+    db.exec(`ALTER TABLE remuneration_claims ADD COLUMN mobile_number TEXT`);
+    console.log('   ➜ Applied database migration: Added bank details columns');
+  } catch (e) {
+    // Columns likely already exist, safe to ignore
   }
 
   return db;

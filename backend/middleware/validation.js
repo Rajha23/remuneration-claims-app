@@ -32,6 +32,20 @@ function validateClaim(req, res, next) {
     errors.push('Valid designation is required');
   }
 
+  // Bank Details (always required)
+  if (!body.bank_name || body.bank_name.trim().length === 0) {
+    errors.push('Bank Name is required');
+  }
+  if (!body.account_number || body.account_number.trim().length === 0) {
+    errors.push('Account Number is required');
+  }
+  if (!body.ifsc_code || body.ifsc_code.trim().length === 0) {
+    errors.push('IFSC Code is required');
+  }
+  if (!body.mobile_number || body.mobile_number.trim().length === 0) {
+    errors.push('Mobile Number is required');
+  }
+
   // Question Paper Setting
   if (body.qp_section_enabled) {
     if (body.qp_type && !VALID_QP_TYPES.includes(body.qp_type)) {

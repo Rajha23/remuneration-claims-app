@@ -470,6 +470,14 @@ function generatePrintHtml(claim) {
     <div><span class="info-label">Department:</span> ${escapeHtml(claim.department || '-')}</div>
     <div><span class="info-label">Designation:</span> ${escapeHtml(claim.designation || '-')}</div>
   </div>
+  <div class="info-row" style="border-top:1px dashed #ccc; padding-top:10pt; margin-top:5pt;">
+    <div><span class="info-label">Bank Name:</span> ${escapeHtml(claim.bank_name || '-')}</div>
+    <div><span class="info-label">A/C No:</span> ${escapeHtml(claim.account_number || '-')}</div>
+  </div>
+  <div class="info-row">
+    <div><span class="info-label">IFSC Code:</span> ${escapeHtml(claim.ifsc_code || '-')}</div>
+    <div><span class="info-label">Mobile:</span> ${escapeHtml(claim.mobile_number || '-')}</div>
+  </div>
 
   <table>
     <thead><tr><th>S.No</th><th>Description</th><th>Details</th><th>Quantity</th><th>Rate (₹)</th><th style="text-align:right">Amount (₹)</th></tr></thead>
