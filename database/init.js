@@ -55,6 +55,7 @@ function initDatabase() {
       department TEXT NOT NULL,
       designation TEXT NOT NULL,
       bank_name TEXT,
+      bank_branch TEXT,
       account_number TEXT,
       ifsc_code TEXT,
       mobile_number TEXT,
@@ -143,6 +144,7 @@ function initDatabase() {
   // ── Migrations ──────────────────────────────────────────────────
   try {
     db.exec(`ALTER TABLE remuneration_claims ADD COLUMN bank_name TEXT`);
+    db.exec(`ALTER TABLE remuneration_claims ADD COLUMN bank_branch TEXT`);
     db.exec(`ALTER TABLE remuneration_claims ADD COLUMN account_number TEXT`);
     db.exec(`ALTER TABLE remuneration_claims ADD COLUMN ifsc_code TEXT`);
     db.exec(`ALTER TABLE remuneration_claims ADD COLUMN mobile_number TEXT`);

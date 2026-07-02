@@ -61,7 +61,7 @@ router.post('/', validateClaim, (req, res) => {
     const stmt = db.prepare(`
       INSERT INTO remuneration_claims (
         claim_number, staff_name, staff_id, department, designation,
-        bank_name, account_number, ifsc_code, mobile_number,
+        bank_name, bank_branch, account_number, ifsc_code, mobile_number,
         staff_section_enabled, qp_section_enabled, qp_type, qp_quantity, qp_rate, qp_amount,
         scrutiny_quantity, scrutiny_rate, scrutiny_amount,
         eval_appointment, eval_phase, eval_date, eval_scripts, eval_rate, eval_amount,
@@ -69,7 +69,7 @@ router.post('/', validateClaim, (req, res) => {
         grand_total, amount_in_words
       ) VALUES (
         ?, ?, ?, ?, ?,
-        ?, ?, ?, ?,
+        ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?,
         ?, 300, ?,
         ?, ?, ?, ?, 30, ?,
@@ -87,6 +87,7 @@ router.post('/', validateClaim, (req, res) => {
       sanitize(b.department?.trim()),
       b.designation,
       sanitize(b.bank_name?.trim()),
+      sanitize(b.bank_branch?.trim()),
       sanitize(b.account_number?.trim()),
       sanitize(b.ifsc_code?.trim()),
       sanitize(b.mobile_number?.trim()),
@@ -425,7 +426,7 @@ router.put('/:id', requireAdmin, validateClaim, (req, res) => {
     const stmt = db.prepare(`
       UPDATE remuneration_claims SET
         staff_name = ?, staff_id = ?, department = ?, designation = ?,
-        bank_name = ?, account_number = ?, ifsc_code = ?, mobile_number = ?,
+        bank_name = ?, bank_branch = ?, account_number = ?, ifsc_code = ?, mobile_number = ?,
         staff_section_enabled = ?,
         qp_section_enabled = ?, qp_type = ?, qp_quantity = ?, qp_rate = ?, qp_amount = ?,
         scrutiny_quantity = ?, scrutiny_amount = ?,
@@ -442,6 +443,7 @@ router.put('/:id', requireAdmin, validateClaim, (req, res) => {
       sanitize(b.department?.trim()),
       b.designation,
       sanitize(b.bank_name?.trim()),
+      sanitize(b.bank_branch?.trim()),
       sanitize(b.account_number?.trim()),
       sanitize(b.ifsc_code?.trim()),
       sanitize(b.mobile_number?.trim()),

@@ -36,6 +36,9 @@ function validateClaim(req, res, next) {
   if (!body.bank_name || body.bank_name.trim().length === 0) {
     errors.push('Bank Name is required');
   }
+  if (!body.bank_branch || body.bank_branch.trim().length === 0) {
+    errors.push('Bank Branch is required');
+  }
   if (!body.account_number || body.account_number.trim().length === 0) {
     errors.push('Account Number is required');
   }

@@ -29,6 +29,7 @@ function createClaimsWorkbook(claims) {
     { header: 'Department', key: 'department', width: 20 },
     { header: 'Designation', key: 'designation', width: 20 },
     { header: 'Bank Name', key: 'bank_name', width: 20 },
+    { header: 'Branch Name', key: 'bank_branch', width: 20 },
     { header: 'Account Number', key: 'account_number', width: 20 },
     { header: 'IFSC Code', key: 'ifsc_code', width: 15 },
     { header: 'Mobile Number', key: 'mobile_number', width: 15 },

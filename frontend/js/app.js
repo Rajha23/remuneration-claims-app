@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         department: document.getElementById('department').value.trim(),
         designation: document.getElementById('designation').value,
         bank_name: document.getElementById('bankName').value.trim(),
+        bank_branch: document.getElementById('bankBranch').value.trim(),
         account_number: document.getElementById('accountNumber').value.trim(),
         ifsc_code: document.getElementById('ifscCode').value.trim(),
         mobile_number: document.getElementById('mobileNumber').value.trim(),
@@ -371,6 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!document.getElementById('department').value.trim()) errors.push('Department is required');
       if (!document.getElementById('designation').value) errors.push('Designation is required');
       if (!document.getElementById('bankName').value.trim()) errors.push('Bank Name is required');
+      if (!document.getElementById('bankBranch').value.trim()) errors.push('Bank Branch is required');
       if (!document.getElementById('accountNumber').value.trim()) errors.push('Account Number is required');
       if (!document.getElementById('ifscCode').value.trim()) errors.push('IFSC Code is required');
       if (!document.getElementById('mobileNumber').value.trim()) errors.push('Mobile Number is required');
@@ -485,6 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
       department: document.getElementById('department').value,
       designation: document.getElementById('designation').value,
       bank_name: document.getElementById('bankName').value,
+      bank_branch: document.getElementById('bankBranch').value,
       account_number: document.getElementById('accountNumber').value,
       ifsc_code: document.getElementById('ifscCode').value,
       mobile_number: document.getElementById('mobileNumber').value,
@@ -522,6 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data.department) document.getElementById('department').value = data.department;
     if (data.designation) document.getElementById('designation').value = data.designation;
     if (data.bank_name) document.getElementById('bankName').value = data.bank_name;
+    if (data.bank_branch) document.getElementById('bankBranch').value = data.bank_branch;
     if (data.account_number) document.getElementById('accountNumber').value = data.account_number;
     if (data.ifsc_code) document.getElementById('ifscCode').value = data.ifsc_code;
     if (data.mobile_number) document.getElementById('mobileNumber').value = data.mobile_number;

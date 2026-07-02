@@ -159,6 +159,10 @@ function renderViewMode() {
           <div class="detail-field-value">${escapeHtml(c.bank_name || '-')}</div>
         </div>
         <div class="detail-field">
+          <div class="detail-field-label">Branch Name</div>
+          <div class="detail-field-value">${escapeHtml(c.bank_branch || '-')}</div>
+        </div>
+        <div class="detail-field">
           <div class="detail-field-label">Account Number</div>
           <div class="detail-field-value">${escapeHtml(c.account_number || '-')}</div>
         </div>
@@ -313,6 +317,12 @@ function renderEditMode() {
             <input type="text" class="form-input" id="editBankName" value="${escapeHtml(c.bank_name || '')}" placeholder=" " required>
             <label class="form-label" for="editBankName">Bank Name *</label>
           </div>
+          <div class="form-group">
+            <input type="text" class="form-input" id="editBankBranch" value="${escapeHtml(c.bank_branch || '')}" placeholder=" " required>
+            <label class="form-label" for="editBankBranch">Branch Name *</label>
+          </div>
+        </div>
+        <div class="form-row">
           <div class="form-group">
             <input type="text" class="form-input" id="editAccountNumber" value="${escapeHtml(c.account_number || '')}" placeholder=" " required>
             <label class="form-label" for="editAccountNumber">Account Number *</label>
@@ -493,6 +503,7 @@ async function saveEdit() {
     department: document.getElementById('editDepartment').value.trim(),
     designation: document.getElementById('editDesignation').value,
     bank_name: document.getElementById('editBankName').value.trim(),
+    bank_branch: document.getElementById('editBankBranch').value.trim(),
     account_number: document.getElementById('editAccountNumber').value.trim(),
     ifsc_code: document.getElementById('editIfscCode').value.trim(),
     mobile_number: document.getElementById('editMobileNumber').value.trim(),
@@ -530,7 +541,7 @@ async function saveEdit() {
   };
 
   // Validate
-  if (!payload.staff_name || !payload.staff_id || !payload.department || !payload.designation || !payload.bank_name || !payload.account_number || !payload.ifsc_code || !payload.mobile_number) {
+  if (!payload.staff_name || !payload.staff_id || !payload.department || !payload.designation || !payload.bank_name || !payload.bank_branch || !payload.account_number || !payload.ifsc_code || !payload.mobile_number) {
     showToast('All Staff and Bank Details are required', 'error');
     btn.classList.remove('loading');
     btn.disabled = false;
@@ -650,11 +661,15 @@ function generatePrintHtmlDetail(claim) {
   </div>
   <div class="info-row" style="border-top:1px dashed #ccc; padding-top:10pt; margin-top:5pt;">
     <div><span class="info-label">Bank Name:</span> ${escapeHtml(claim.bank_name || '-')}</div>
-    <div><span class="info-label">A/C No:</span> ${escapeHtml(claim.account_number || '-')}</div>
+    <div><span class="info-label">Branch Name:</span> ${escapeHtml(claim.bank_branch || '-')}</div>
   </div>
   <div class="info-row">
+    <div><span class="info-label">A/C No:</span> ${escapeHtml(claim.account_number || '-')}</div>
     <div><span class="info-label">IFSC Code:</span> ${escapeHtml(claim.ifsc_code || '-')}</div>
+  </div>
+  <div class="info-row">
     <div><span class="info-label">Mobile:</span> ${escapeHtml(claim.mobile_number || '-')}</div>
+    <div></div>
   </div>
 
   <table>
