@@ -50,7 +50,7 @@ async function uploadPassbook(base64Data, claimNumber) {
 router.post('/', validateClaim, async (req, res) => {
   try {
     const b = req.body;
-    const claimNumber = generateClaimNumber();
+    const claimNumber = await generateClaimNumber();
 
     let qpAmount = 0;
     if (b.qp_section_enabled) {

@@ -4,7 +4,7 @@
  * Number-to-words conversion (Indian Rupees) and claim number generation.
  */
 
-const { getDb } = require('../../database/init');
+const supabase = require('../supabase');
 
 // ── Number to Words (Indian Rupees) ─────────────────────────────────
 
@@ -50,23 +50,24 @@ function numberToWords(amount) {
 
 /**
  * Generate a unique claim number in format CLM-YYYY-NNNN
- * @returns {string} Unique claim number
+ * @returns {Promise<string>} Unique claim number
  */
-function generateClaimNumber() {
-  const db = getDb();
+async function generateClaimNumber() {
   const year = new Date().getFullYear();
   const prefix = `CLM-${year}-`;
   
   // Find the last claim number for this year
-  const lastClaim = db.prepare(
-    `SELECT claim_number FROM remuneration_claims 
-     WHERE claim_number LIKE ? 
-     ORDER BY id DESC LIMIT 1`
-  ).get(prefix + '%');
+  const { data, error } = await supabase
+    .from('remuneration_claims')
+    .select('claim_number')
+    .like('claim_number', `${prefix}%`)
+    .order('id', { ascending: false })
+    .limit(1)
+    .single();
 
   let nextNum = 1;
-  if (lastClaim) {
-    const lastNum = parseInt(lastClaim.claim_number.split('-')[2], 10);
+  if (data && data.claim_number) {
+    const lastNum = parseInt(data.claim_number.split('-')[2], 10);
     nextNum = lastNum + 1;
   }
 
