@@ -210,7 +210,16 @@ router.get('/', requireAdmin, (req, res) => {
 
     // Get paginated data
     const dataQuery = `
-      SELECT * FROM remuneration_claims 
+      SELECT 
+        id, claim_number, created_at, updated_at,
+        staff_name, staff_id, department, designation,
+        bank_name, bank_branch, account_number, ifsc_code, mobile_number,
+        staff_section_enabled, qp_section_enabled, qp_type, qp_quantity, qp_rate, qp_amount,
+        scrutiny_quantity, scrutiny_rate, scrutiny_amount,
+        eval_appointment, eval_phase, eval_date, eval_scripts, eval_rate, eval_amount,
+        squad_days, squad_session, squad_rate, squad_amount,
+        grand_total, amount_in_words
+      FROM remuneration_claims 
       ${whereClause} 
       ORDER BY ${orderBy} 
       LIMIT ? OFFSET ?
