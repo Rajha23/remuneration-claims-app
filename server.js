@@ -81,6 +81,9 @@ app.get('/admin/dashboard', (req, res) => {
 app.get('/admin/claims', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'admin', 'claims.html'));
 });
+app.get('/admin/users', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'admin', 'users.html'));
+});
 app.get('/admin/claim/:id', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'admin', 'claim-detail.html'));
 });

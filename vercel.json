@@ -24,6 +24,10 @@
       "dest": "/frontend/admin/claims.html"
     },
     {
+      "src": "/admin/users",
+      "dest": "/frontend/admin/users.html"
+    },
+    {
       "src": "/admin/claim/.*",
       "dest": "/frontend/admin/claim-detail.html"
     },
