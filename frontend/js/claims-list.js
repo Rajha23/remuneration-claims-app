@@ -35,7 +35,12 @@ async function loadAdminInfo() {
   try {
     const res = await apiFetch('/api/auth/me');
     if (res && res.ok) {
-      const me = await res.json();
+      const data = await res.json();
+      if (data.role !== 'admin') {
+        window.location.href = '/admin';
+        return;
+      }
+      const me = data.user;
       document.getElementById('userName').textContent = me.fullName || me.username;
       document.getElementById('userAvatar').textContent = (me.fullName || me.username).charAt(0).toUpperCase();
     }

@@ -44,7 +44,12 @@ async function loadDashboard() {
     // Load admin info
     const meRes = await apiFetch('/api/auth/me');
     if (meRes && meRes.ok) {
-      const me = await meRes.json();
+      const data = await meRes.json();
+      if (data.role !== 'admin') {
+        window.location.href = '/admin';
+        return;
+      }
+      const me = data.user;
       document.getElementById('userName').textContent = me.fullName || me.username;
       document.getElementById('userAvatar').textContent = (me.fullName || me.username).charAt(0).toUpperCase();
     }

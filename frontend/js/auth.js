@@ -67,7 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
       if (res.ok) {
-        window.location.href = '/admin/dashboard';
+        const data = await res.json();
+        if (data.role === 'admin') window.location.href = '/admin/dashboard';
       }
     } catch (err) {
       // Not authenticated — stay on login
