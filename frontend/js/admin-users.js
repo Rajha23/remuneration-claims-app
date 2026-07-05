@@ -156,20 +156,19 @@ async function fetchAdmins() {
     const data = await res.json();
     
     if (!data.admins || data.admins.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:2rem;">No admin profiles found.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;padding:2rem;">No admin profiles found.</td></tr>';
       return;
     }
 
     tbody.innerHTML = data.admins.map(a => `
       <tr>
         <td><strong>${escapeHtml(a.username)}</strong></td>
-        <td>${escapeHtml(a.full_name)}</td>
         <td>${new Date(a.created_at).toLocaleDateString()}</td>
       </tr>
     `).join('');
   } catch (err) {
     console.error(err);
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--danger-color);padding:2rem;">Failed to load admins.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--danger-color);padding:2rem;">Failed to load admins.</td></tr>';
   }
 }
 

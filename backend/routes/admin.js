@@ -145,7 +145,7 @@ router.get('/users/admins', async (req, res) => {
   try {
     const { data: admins, error } = await supabase
       .from('admins')
-      .select('id, username, full_name, created_at')
+      .select('id, username, created_at')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -162,9 +162,9 @@ router.get('/users/admins', async (req, res) => {
  */
 router.post('/users/admins', async (req, res) => {
   try {
-    const { username, full_name, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!username || !full_name || !password) {
+    if (!username || !password) {
       return res.status(400).json({ error: 'All fields are required' });
     }
     if (password.length < 6) {
@@ -187,10 +187,10 @@ router.post('/users/admins', async (req, res) => {
       .from('admins')
       .insert([{
         username: username.trim(),
-        full_name: full_name.trim(),
+        full_name: null,
         password_hash
       }])
-      .select('id, username, full_name, created_at')
+      .select('id, username, created_at')
       .single();
 
     if (error) throw error;
