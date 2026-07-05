@@ -7,14 +7,14 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { getDb } = require('../../database/init');
+const supabase = require('../supabase');
 const { generateToken, requireAdmin } = require('../middleware/auth');
 
 /**
  * POST /api/auth/login
  * Admin login with username and password
  */
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -22,10 +22,13 @@ router.post('/login', (req, res) => {
       return res.status(400).json({ error: 'Username and password are required' });
     }
 
-    const db = getDb();
-    const admin = db.prepare('SELECT * FROM admins WHERE username = ?').get(username);
+    const { data: admin, error } = await supabase
+      .from('admins')
+      .select('*')
+      .eq('username', username)
+      .single();
 
-    if (!admin) {
+    if (error || !admin) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 

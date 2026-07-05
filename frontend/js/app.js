@@ -140,9 +140,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentPassbookBase64 = null;
   const passbookFileInput = document.getElementById('passbookFile');
-  passbookFileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
+  passbookFileInput.addEventListener('change', async (e) => {
+    let file = e.target.files[0];
     if (file) {
+      if (file.type === 'application/pdf') {
+        if (file.size > 2 * 1024 * 1024) {
+          alert('PDF files must be smaller than 2MB. Please compress your PDF and try again.');
+          passbookFileInput.value = '';
+          currentPassbookBase64 = null;
+          return;
+        }
+      } else if (file.type.startsWith('image/')) {
+        try {
+          const options = {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+          };
+          file = await imageCompression(file, options);
+        } catch (error) {
+          console.error('Image compression error:', error);
+        }
+      }
+      
       const reader = new FileReader();
       reader.onload = (evt) => currentPassbookBase64 = evt.target.result;
       reader.readAsDataURL(file);

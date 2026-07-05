@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-const { initDatabase } = require('./database/init');
+
 const authRoutes = require('./backend/routes/auth');
 const claimsRoutes = require('./backend/routes/claims');
 const adminRoutes = require('./backend/routes/admin');
@@ -96,23 +96,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// ── Start Server ────────────────────────────────────────────────────
-async function start() {
-  try {
-    // Initialize database and seed admin account
-    initDatabase();
-    console.log('✅ Database initialized');
+app.listen(PORT, () => {
+  console.log(`\n🚀 APRIL MAY Remuneration Claim System`);
+  console.log(`   ➜ Claim Form:  http://localhost:${PORT}`);
+  console.log(`   ➜ Admin Panel: http://localhost:${PORT}/admin`);
+});
 
-    app.listen(PORT, () => {
-      console.log(`\n🚀 APRIL MAY Remuneration Claim System`);
-      console.log(`   ➜ Claim Form:  http://localhost:${PORT}`);
-      console.log(`   ➜ Admin Panel: http://localhost:${PORT}/admin`);
-      console.log(`   ➜ Default Admin: admin / admin123\n`);
-    });
-  } catch (err) {
-    console.error('❌ Failed to start server:', err);
-    process.exit(1);
-  }
-}
-
-start();
+module.exports = app;
