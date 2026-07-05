@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage Users - APRIL MAY Remuneration Claim Management System">
+  <title>Users | Admin Panel</title>
+  <link rel="stylesheet" href="/css/styles.css?v=15">
+  <link rel="stylesheet" href="/css/admin.css?v=15">
+  <style>
+    .tabs { display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+    .tab-btn { padding: 0.75rem 1.5rem; background: transparent; border: none; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--primary-600); border-bottom-color: var(--primary-600); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.3s ease; }
+    
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--bg-card); width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-xl); position: relative; }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-muted); }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; }
+    .form-group input, .form-group select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-family: inherit; background: var(--bg-body); color: var(--text-primary); }
+  </style>
+</head>
+<body>
+  <div class="background-mesh"><div class="blob-1"></div><div class="blob-2"></div></div>
+
+  <div class="admin-layout">
+    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>📋 Claims Admin</h2>
+        <div class="sidebar-subtitle">Remuneration System</div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard" class="sidebar-link"><span class="sidebar-link-icon">📊</span> Dashboard</a>
+        <a href="/admin/claims" class="sidebar-link"><span class="sidebar-link-icon">📄</span> All Claims</a>
+        <a href="/admin/users" class="sidebar-link active"><span class="sidebar-link-icon">👥</span> Users</a>
+        <a href="/" class="sidebar-link" target="_blank"><span class="sidebar-link-icon">📝</span> Claim Form</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user" style="margin-bottom: 1rem;">
+          <div class="sidebar-user-avatar" id="userAvatar">A</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="userName">Admin</div>
+            <div class="sidebar-user-role">Administrator</div>
+          </div>
+        </div>
+        <button class="btn btn-outline" id="logoutBtn" style="width: 100%; border-color: rgba(255,255,255,0.2); color: #fff; justify-content: center;">🚪 Log Out</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-topbar-title">Manage Users</h1>
+        <div class="admin-topbar-actions">
+          <button class="theme-toggle" onclick="toggleDarkMode()" title="Toggle dark mode" style="background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border-color);"><span class="icon-moon">🌙</span><span class="icon-sun" style="display:none;">☀️</span></button>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="tabs">
+          <button class="tab-btn active" data-target="staffPane">Staff Accounts</button>
+          <button class="tab-btn" data-target="adminPane">Admin Profiles</button>
+        </div>
+
+        <!-- Staff Pane -->
+        <div class="tab-pane active" id="staffPane">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Staff Directory</h2>
+            <button class="btn btn-primary btn-sm" onclick="openModal('staffModal')">➕ Add Staff</button>
+          </div>
+          <div class="card" style="padding:0; overflow:hidden;">
+            <div class="table-responsive">
+              <table class="table" id="staffTable">
+                <thead>
+                  <tr>
+                    <th>Staff ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="4" style="text-align:center;padding:2rem;">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Pane -->
+        <div class="tab-pane" id="adminPane">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Admin Profiles</h2>
+            <button class="btn btn-primary btn-sm" onclick="openModal('adminModal')">➕ Add Admin</button>
+          </div>
+          <div class="card" style="padding:0; overflow:hidden;">
+            <div class="table-responsive">
+              <table class="table" id="adminTable">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="3" style="text-align:center;padding:2rem;">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create Staff Modal -->
+  <div class="modal" id="staffModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('staffModal')">×</button>
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Create Staff Account</h3>
+      <div id="staffFormError" style="color: var(--danger-color); margin-bottom: 1rem; font-size: 0.9rem; display: none;"></div>
+      <form id="createStaffForm">
+        <div class="form-group">
+          <label>Staff ID</label>
+          <input type="text" name="staff_id" placeholder="e.g. TRPT1234" required>
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="staff_name" required>
+        </div>
+        <div class="form-group">
+          <label>Department</label>
+          <select name="department" required>
+            <option value="">Select Department</option>
+            <option value="AIDS">AIDS</option>
+            <option value="Civil">Civil</option>
+            <option value="CSE">CSE</option>
+            <option value="EEE">EEE</option>
+            <option value="ECE">ECE</option>
+            <option value="MECH">MECH</option>
+            <option value="CHEMISTRY">CHEMISTRY</option>
+            <option value="MATHS">MATHS</option>
+            <option value="PHYSICS">PHYSICS</option>
+            <option value="ENGLISH">ENGLISH</option>
+            <option value="TAMIL">TAMIL</option>
+            <option value="MBA">MBA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Password (min 6 characters)</label>
+          <input type="password" name="password" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Staff</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Admin Modal -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('adminModal')">×</button>
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Create Admin Profile</h3>
+      <div id="adminFormError" style="color: var(--danger-color); margin-bottom: 1rem; font-size: 0.9rem; display: none;"></div>
+      <form id="createAdminForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" name="username" required>
+        </div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="full_name" required>
+        </div>
+        <div class="form-group">
+          <label>Password (min 6 characters)</label>
+          <input type="password" name="password" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Admin</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/utils.js?v=15"></script>
+  <script src="/js/admin-users.js?v=15"></script>
+</body>
+</html>
