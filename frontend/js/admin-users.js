@@ -134,17 +134,23 @@ async function fetchStaff() {
       return;
     }
 
-    tbody.innerHTML = data.staff.map(s => `
+    let userMap = window.userMap || {};
+    
+    tbody.innerHTML = data.staff.map(s => {
+      const searchKey = `Staff: ${s.staff_id} - ${s.staff_name}`;
+      userMap[searchKey] = { id: s.id, type: 'staff' };
+      return `
       <tr>
         <td><strong>${escapeHtml(s.staff_id)}</strong></td>
         <td>${escapeHtml(s.staff_name)}</td>
         <td><span class="badge badge-outline">${escapeHtml(s.department)}</span></td>
         <td>${new Date(s.created_at).toLocaleDateString()}</td>
-        <td>
-          <button class="btn btn-outline btn-sm" onclick="openChangePasswordModal('${s.id}', 'staff', '${escapeHtml(s.staff_id)} - ${escapeHtml(s.staff_name)}')">Change Password</button>
-        </td>
       </tr>
-    `).join('');
+      `;
+    }).join('');
+    
+    window.userMap = userMap;
+    updateUserDatalist();
   } catch (err) {
     console.error(err);
     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--danger-color);padding:2rem;">Failed to load staff.</td></tr>';
@@ -163,15 +169,21 @@ async function fetchAdmins() {
       return;
     }
 
-    tbody.innerHTML = data.admins.map(a => `
+    let userMap = window.userMap || {};
+
+    tbody.innerHTML = data.admins.map(a => {
+      const searchKey = `Admin: ${a.username}`;
+      userMap[searchKey] = { id: a.id, type: 'admin' };
+      return `
       <tr>
         <td><strong>${escapeHtml(a.username)}</strong></td>
         <td>${a.created_at ? new Date(a.created_at).toLocaleDateString() : '-'}</td>
-        <td>
-          <button class="btn btn-outline btn-sm" onclick="openChangePasswordModal('${a.id}', 'admin', '${escapeHtml(a.username)}')">Change Password</button>
-        </td>
       </tr>
-    `).join('');
+      `;
+    }).join('');
+    
+    window.userMap = userMap;
+    updateUserDatalist();
   } catch (err) {
     console.error(err);
     tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--danger-color);padding:2rem;">Failed to load admins.</td></tr>';
@@ -189,16 +201,14 @@ function closeModal(id) {
   if (form) form.reset();
 }
 
-function openChangePasswordModal(userId, userType, displayUsername) {
-  document.getElementById('changePasswordUserId').value = userId;
-  document.getElementById('changePasswordUserType').value = userType;
-  document.getElementById('changePasswordUsername').textContent = displayUsername;
-  document.getElementById('changePasswordFormError').style.display = 'none';
-  openModal('changePasswordModal');
+function updateUserDatalist() {
+  const datalist = document.getElementById('userList');
+  if (!datalist || !window.userMap) return;
+  datalist.innerHTML = Object.keys(window.userMap).map(key => `<option value="${escapeHtml(key)}"></option>`).join('');
 }
 
 // Handle Change Password Form
-document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+document.getElementById('changePasswordForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = e.target.querySelector('button');
   const originalText = btn.textContent;
@@ -218,10 +228,21 @@ document.getElementById('changePasswordForm').addEventListener('submit', async (
     btn.disabled = false;
     return;
   }
+  
+  const searchInput = document.getElementById('passwordSearch').value;
+  const user = window.userMap ? window.userMap[searchInput] : null;
+  
+  if (!user) {
+    errorDiv.textContent = 'Please select a valid user from the dropdown search.';
+    errorDiv.style.display = 'block';
+    btn.textContent = originalText;
+    btn.disabled = false;
+    return;
+  }
 
-  const endpoint = data.user_type === 'staff' 
-    ? `/api/admin/users/staff/${data.user_id}/password` 
-    : `/api/admin/users/admins/${data.user_id}/password`;
+  const endpoint = user.type === 'staff' 
+    ? `/api/admin/users/staff/${user.id}/password` 
+    : `/api/admin/users/admins/${user.id}/password`;
 
   try {
     const res = await apiFetch(endpoint, {
@@ -234,7 +255,6 @@ document.getElementById('changePasswordForm').addEventListener('submit', async (
     if (!res.ok) throw new Error(resData.error || 'Failed to update password');
     
     e.target.reset();
-    closeModal('changePasswordModal');
     showToast('Password updated successfully', 'success');
   } catch (err) {
     errorDiv.textContent = err.message || 'Failed to update password';
