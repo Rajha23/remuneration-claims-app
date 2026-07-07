@@ -356,7 +356,8 @@ async function deleteUser(id, type, name) {
   }
   
   try {
-    const res = await apiFetch(`/api/admin/users/${type}s/${id}`, {
+    const endpointPath = type === 'staff' ? 'staff' : 'admins';
+    const res = await apiFetch(`/api/admin/users/${endpointPath}/${id}`, {
       method: 'DELETE'
     });
     const data = await res.json();
