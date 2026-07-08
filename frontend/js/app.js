@@ -442,6 +442,61 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!document.getElementById('ifscCode').value.trim()) errors.push('IFSC Code is required');
     if (!document.getElementById('mobileNumber').value.trim()) errors.push('Mobile Number is required');
 
+    // Duties Validation
+    if (!qpEnabled.checked && !scrutinyEnabled.checked && !evalEnabled.checked && !squadEnabled.checked) {
+      errors.push('Please select at least one Duty Performed');
+    }
+
+    if (qpEnabled.checked) {
+      const selectedQp = document.querySelector('input[name="qp_type"]:checked');
+      const qpQty = parseInt(qpQuantity.value) || 0;
+      if (!selectedQp) errors.push('Question Paper: Please select an option');
+      if (qpQty <= 0) errors.push('Question Paper: Quantity must be greater than 0');
+    }
+
+    if (scrutinyEnabled.checked) {
+      const scrQty = parseInt(scrutinyQuantity.value) || 0;
+      if (scrQty <= 0) errors.push('Paper Scrutiny: Quantity must be greater than 0');
+    }
+
+    if (evalEnabled.checked) {
+      if (!evalPhase1Toggle.checked && !evalPhase2Toggle.checked) {
+        errors.push('Script Evaluation: Please select Phase 1 or Phase 2');
+      }
+      if (evalPhase1Toggle.checked) {
+        const a1 = document.getElementById('evalAppt1_1').value;
+        const s1 = parseInt(document.getElementById('evalScripts1_1').value) || 0;
+        const a2 = document.getElementById('evalAppt1_2').value;
+        const s2 = parseInt(document.getElementById('evalScripts1_2').value) || 0;
+        
+        if (!a1 && s1 === 0 && !a2 && s2 === 0) {
+          errors.push('Script Eval Phase 1: Please fill at least one date details');
+        }
+        if ((a1 && s1 === 0) || (!a1 && s1 > 0)) {
+          errors.push('Script Eval Phase 1 (20-06-2026): Select appointment and enter scripts');
+        }
+        if ((a2 && s2 === 0) || (!a2 && s2 > 0)) {
+          errors.push('Script Eval Phase 1 (21-06-2026): Select appointment and enter scripts');
+        }
+      }
+      if (evalPhase2Toggle.checked) {
+        const a3 = document.getElementById('evalAppt2_1').value;
+        const s3 = parseInt(document.getElementById('evalScripts2_1').value) || 0;
+        if (!a3 || s3 === 0) {
+          errors.push('Script Eval Phase 2: Select appointment and enter scripts');
+        }
+      }
+    }
+
+    if (squadEnabled.checked) {
+      const sf = parseInt(squadForenoon.value) || 0;
+      const sa = parseInt(squadAfternoon.value) || 0;
+      const sb = parseInt(squadBoth.value) || 0;
+      if (sf === 0 && sa === 0 && sb === 0) {
+        errors.push('Squad Duty: Enter at least one session quantity');
+      }
+    }
+
     if (errors.length > 0) {
       errors.forEach(err => showToast(err, 'error'));
       return false;
